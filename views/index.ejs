@@ -1,11 +1,22 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <title><%= title %></title>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
-  </head>
-  <body>
-    <h1><%= title %></h1>
-    <p>Welcome to <%= title %></p>
-  </body>
-</html>
+<% include ./partials/header %>
+
+    <% if (msg != null) { %>
+        <div class="alert alert-danger"><%= msg %></div>
+    <% } %>
+
+    <% if (filmelist != null) { %>
+        <div class="row">
+        <% filmelist.forEach(function(filme) { %>
+            <div class="col-md-3">
+                <div class="card mb-3">
+                    <a href="/filme/<%= filme.id %>" style="margin: 0px; padding: 0px; text-decoration: none;">
+                        <img style="max-height: 342px;max-width:100%;display:block;" src="http://image.tmdb.org/t/p/w342<%= filme.poster_path %>">
+                    </a>
+                    <div class="card-body">
+                        <p class="card-text"><%= filme.title %></p>
+                    </div>
+                </div>
+            </div>
+        <% }) %>
+        </div>
+    <% } %>

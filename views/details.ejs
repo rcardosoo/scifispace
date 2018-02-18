@@ -1,0 +1,41 @@
+<% include ./partials/header %>
+
+    <% if (msg != null) { %>
+        <div class="alert alert-danger">
+            <%= msg %>
+        </div>
+        <% } %>
+
+            <% if (filme != null) { %>
+                <div class="row" style="padding: 0px;">
+                    <div class="col-md-6">
+                        <img style="max-height: 780px;max-width:100%;display:block;" src="http://image.tmdb.org/t/p/w780<%= filme.poster_path %>">
+                    </div>
+                    <div class="col-md-6">
+                        <h2><%= filme.title %></h2>
+                        <br/>
+                        <div class="card mb-3">
+                            <h3 class="card-header">Sinopse</h3>
+                            <div class="card-body">
+                                <p class="card-text"><%= filme.overview %></p>
+                            </div>
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item">
+                                    <% filme.genres.forEach(function(genre) { %>
+                                        <% if (genre.id == 878) { %>
+                                             | <strong><%= genre.name %></strong>
+                                        <% } else { %>
+                                             | <%= genre.name %>
+                                        <% } %> 
+                                    <% }) %> |
+                                </li>
+                                <li class="list-group-item">Duração: <%= filme.runtime %> | Lançamento em <%= filme.release_date %>
+                                 </li>
+                                <li class="list-group-item">Popularidade: <%= filme.popularity %>
+                                | IMDB: <%= filme.vote_average %></li>
+                                <li class="list-group-item">Dirigido por <strong><%= production.crew[0].name %></strong></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <% } %>
