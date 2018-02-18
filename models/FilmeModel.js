@@ -1,76 +1,73 @@
 "use strict";
-var mysql = require('mysql');
+var request = require('request');
 var db = require("../db/db");
 
 class FilmeModel {
 
+    sincronizar(urlAPI, totalPages, callback) {
+        var self = this;
+        console.log("ENTROU NO SINCRONIZAR");
+        var Filmes = db.Mongoose.model('filme', db.FilmeSchema, 'filme');
+        Filmes.remove({}).exec();
+        console.log("TRUNCOU BANCO");
+        console.log("TOTAL PAGES = " + totalPages);
+        for (var page = 1; page <= totalPages; page++) {
+            console.log("VAI REQUISITAR PAGINA : " + page);
+            var urlPage = urlAPI + "&page=" + page;
+            request(urlPage, function callback(error, response, body) {
+                console.log("REALIZOU REQUEST");
+                if (!error) {
+                    var data = JSON.parse(body);
+                    for (var index in data.results) {
+                        console.log("INTEROU DATA.RESULT = "+data.results);
+                        self.insertData(data.results[index], page, function (err, result) {
+                            if (!result) {
+                                console.log("Erro no metodo inserData: " + err);
+                            }
+                        });
+                    }
+                }
+            });
+        }
+        callback(null, true);
+    }
+
     showData(callback) {
         var Filmes = db.Mongoose.model('filme', db.FilmeSchema, 'filme');
-        Filmes.find({}).lean().exec(
-           function (e, docs) {
+        Filmes.find({}).sort( { vote_average: -1 } )
+        .lean().exec(
+            function (e, docs) {
                 callback(docs);
-        });
+            });
     }
 
-    /*insert(data, conn, callback) {
-            var sqlini = "INSERT INTO `filme` (`id`, `title`, `average`, `popularity`, `poster_path`, `overview`, `release_date`) VALUES";
-            var values =    "('" + data.id + "'," +
-                            "'" + data.title + "'," +
-                            "'" + data.average + "'," +
-                            "'" + data.popularity + "'," +
-                            "'" + data.poster_path + "'," +
-                            "'" + data.overview + "'," +
-                            "'" + data.release_date + "')";
+    insertData(data, page, callback) {
+        console.log("ENTROU NO INSERT DATA");
+        console.log("VAI INSERIR: " + data);
+        var Filmes = db.Mongoose.model('filme', db.FilmeSchema, 'filme');
+        var filme = new Filmes({
+            id: data.id,
+            vote_average: data.vote_average,
+            title: data.title,
+            popularity: data.popularity,
+            poster_path: data.poster_path,
+            overview: data.overview,
+            release_date: data.release_date,
+            voto: 0,
+            Page: page
+        });
 
-            var sql = sqlini+" "+values;
-            console.log("SQL A SER EXECUTADO: "+sql);
-            conn.query(sql, function(error, results, fields){
-                setTimeout(function() {console.log("WAIT INSERT");},1000);
-                if(error) {
-                    console.log("ERRO NO BD FOI: "+error);
-                    callback(false);
-                }
-                else {
-                    callback(true);
-                }
-            }).on('close', function() {
-                conn.end();
-            });
-
-    }//end insert
-
-    truncateTable(callback) {
-        try {
-            var sql = "truncate table `filme`";
-            this.execSQLQuery(sql, function (error, results){
-                if(error) {
-                    throw "Database error: "+error;
-                } else {
-                    console.log("ZEROU A TABELA FILMES");
-                    callback(null, true);  
-                }              
-            });
-        } catch(err) {
-            callback(err, false);
-        }
+        filme.save(function (err) {
+            if (err) {
+                console.log("Error! " + err.message);
+                callback(err, false);
+            }
+            else {
+                console.log("Filme cadastrado!");
+                callback(null, true);
+            }
+        });
     }
-
-    execSQLQuery(sqlQry, callback){
-        const connection = mysql.createConnection({
-            host: "localhost",
-            user: "root",
-            password: "",
-            database: "scifispace"
-        });
-       
-        connection.query(sqlQry, function(error, results, fields){
-            if(error) 
-                callback(error, null);
-            else
-              callback(null, results);
-            connection.end();
-        });
-    }//end execSqlQuery*/
 }
 
 module.exports = FilmeModel;

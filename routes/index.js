@@ -8,7 +8,7 @@ var urlAPI = "https://api.themoviedb.org/3/discover/movie?api_key=516df799631d51
 var FilmeService = require("../models/FilmeService");
 var filmeService = new FilmeService();
 
-router.get('/', function(req, res, next) {
+router.get('/service', function(req, res, next) {
   filmeService.pageList(urlAPI, 1, function(err, result) {
     if (!err) {
       res.render('index', { filmelist: result, msg: null });
@@ -33,5 +33,29 @@ router.get('/filme/:id', function (req, res, next) {
   });
 });
 
+router.get('/', function (req, res, next) {
+  filmeModel.showData(function(data) {
+          res.render('index', { "filmelist": data, msg: null });      
+  });
+});
+
+router.get('/sincronizar', function(req, res, next) {
+  var urlAPI = "https://api.themoviedb.org/3/discover/movie?api_key=516df799631d51e95f9abca329a46d83&language=pt-BR&sort_by=popularity.desc&with_genres=878&include_video=false";
+  
+  request(urlAPI, function callback(error, response, body) {
+    if (!error && response.statusCode == 200) {
+      var data = JSON.parse(body);
+      var totalPages = parseInt(data.total_pages);
+      filmeModel.sincronizar(urlAPI, totalPages, function(err, result) {
+        if (!err) {
+          res.render('index', { filmelist: result, msg: null });     
+        } else {
+          res.render('index', { filmelist: null, msg: "O serviço está fora do ar" });
+        }
+      });
+    }
+  });
+  
+});
 
 module.exports = router;
