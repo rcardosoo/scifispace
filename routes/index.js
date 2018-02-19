@@ -39,6 +39,14 @@ router.get('/', function (req, res, next) {
   });
 });
 
+router.get('/sobre', function (req, res, next) {
+  res.render('sobre', {});
+});
+
+router.get('/registro', function (req, res, next) {
+  res.render('registro', {});
+});
+
 router.get('/sincronizar', function(req, res, next) {  
   request(urlAPI, function callback(error, response, body) {
     if (!error && response.statusCode == 200) {
@@ -46,7 +54,7 @@ router.get('/sincronizar', function(req, res, next) {
       var totalPages = parseInt(data.total_pages);
       filmeModel.sincronizar(urlAPI, totalPages, function(err, result) {
         if (!err) {
-          res.render('index', { filmelist: result, msg: null });     
+          res.redirect('/');     
         } else {
           res.render('index', { filmelist: null, msg: "O serviço está fora do ar" });
         }

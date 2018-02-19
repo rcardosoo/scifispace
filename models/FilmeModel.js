@@ -6,20 +6,14 @@ class FilmeModel {
 
     sincronizar(urlAPI, totalPages, callback) {
         var self = this;
-        console.log("ENTROU NO SINCRONIZAR");
         var Filmes = db.Mongoose.model('filme', db.FilmeSchema, 'filme');
         Filmes.remove({}).exec();
-        console.log("TRUNCOU BANCO");
-        console.log("TOTAL PAGES = " + totalPages);
         for (var page = 1; page <= totalPages; page++) {
-            console.log("VAI REQUISITAR PAGINA : " + page);
             var urlPage = urlAPI + "&page=" + page;
             request(urlPage, function callback(error, response, body) {
-                console.log("REALIZOU REQUEST");
                 if (!error) {
                     var data = JSON.parse(body);
                     for (var index in data.results) {
-                        console.log("INTEROU DATA.RESULT = "+data.results);
                         self.insertData(data.results[index], page, function (err, result) {
                             if (!result) {
                                 console.log("Erro no metodo inserData: " + err);
@@ -42,7 +36,7 @@ class FilmeModel {
     }
 
     searchFilme(busca, callback) {
-        console.log("VAI TENTAR PELO MONGO, BUSCA: "+busca);
+        console.log("VAI BUSCAR PELO MONGO, BUSCA: "+busca);
         var Filmes = db.Mongoose.model('filme', db.FilmeSchema, 'filme');
         Filmes.find({title: "/"+busca+"/"}).sort( { popularity: -1 } )
         .lean().exec(
