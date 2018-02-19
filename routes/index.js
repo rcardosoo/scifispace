@@ -3,6 +3,9 @@ var router = express.Router();
 var request = require('request');
 var FilmeModel = require("../models/FilmeModel");
 var filmeModel = new FilmeModel();
+var UserModel = require("../models/UserModel");
+var userModel = new UserModel();
+var session = require('express-session');
 var urlAPI = "https://api.themoviedb.org/3/discover/movie?api_key=516df799631d51e95f9abca329a46d83&language=pt-BR&sort_by=popularity.desc&with_genres=878&include_video=false";
 
 var FilmeService = require("../models/FilmeService");
@@ -25,7 +28,11 @@ router.get('/filme/:id', function (req, res, next) {
     if (!err) {
       filmeService.filmeProduction(urlProd, function(error, resData){
         console.log(JSON.stringify(resData));
-        res.render('details', { filme: result, production: resData, msg: null });        
+        if (session.logado) {
+          res.render('details', { filme: result, production: resData, msg: null, user: session.email });                  
+        } else {
+          res.render('details', { filme: result, production: resData, msg: null });                  
+        }
       });
     } else {
       res.render('details', { filme: null, msg: "O serviço está fora do ar" });
@@ -44,7 +51,7 @@ router.get('/sobre', function (req, res, next) {
 });
 
 router.get('/registro', function (req, res, next) {
-  res.render('registro', {});
+  res.render('registro', { msg: null, error: false });
 });
 
 router.get('/sincronizar', function(req, res, next) {  
@@ -90,6 +97,54 @@ router.post('/busca', function(req, res, next) {
     } else {
       console.log("Erro: "+err);
       res.render('index', { filmelist: null, msg:"Algum erro aconteceu"});
+    }
+  });
+});
+
+router.post('/store', function(req, res, next) {
+  var user = {
+    nome: req.body.nome,
+    email: req.body.email,
+    senha: req.body.senha
+  };
+
+  userModel.create(user, function(err, result) {
+    if (!err && result) {
+      res.render('registro', { msg:"Usuário cadastrado com sucesso", error: false });
+    } else {
+      console.log("Erro ao cadastrar: "+err);
+      res.render('registro', { msg:"Não foi possível cadastrar o usuário", error: true });      
+    }
+  });
+
+});
+
+router.get('/logout', function(req, res, next) {
+  session.user = null;
+  session.logado = false;
+  return res.redirect('/');   
+});
+
+router.post('/login', function(req, res, next) {
+  var data = {
+    email: req.body.email,
+    senha: req.body.senha
+  };
+
+  userModel.login(data, function (err, result) {
+    if (!err && result) {
+      console.log("voltou resutado");
+      session.user = result.nome;
+      session.email = result.email;
+      session.logado = true;
+      filmeModel.showData(function(data) {
+        res.render('index', { "filmelist": data, msg: null, user: session.logado });      
+      });  
+    } else {
+      console.log("falhou");
+      filmeModel.showData(function(data) {
+        res.render('index', { "filmelist": data, msg: "Email ou senha incorretos" });      
+      });           
     }
   });
 });

@@ -1,29 +1,39 @@
 <% include ./partials/header %>
 
-<div class="container" style="width: 60%;">
-    <h4>Cadastre-se para computar seus votos</h4>
-    <hr />
-    <form>
-        <div class="form-group">
-            <label>Nome</label>
-            <input type="text" class="form-control" placeholder="Digite seu nome" required>
-        </div>
 
-        <div class="form-group">
-            <label>Email</label>
-            <input type="email" class="form-control" aria-describedby="emailHelp" placeholder="Digite seu email" required>
-        </div>
+    <div class="container" style="width: 60%;">
+        <% if (!error) { %>
+            <% if (msg != null) { %>
+                <div class="alert alert-success">
+                    <%= msg %>
+                </div>
+            <% } %>
+        <% } else { %>
+            <% if (msg != null) { %>
+                <div class="alert alert-danger">
+                    <%= msg %>
+                </div>
+            <% } %>
+        <% } %>
+       
+                <h4>Cadastre-se para computar seus votos</h4>
+                <hr />
+                <form action="/store" method="post">
+                    <div class="form-group">
+                        <label>Nome</label>
+                        <input type="text" class="form-control" name="nome" placeholder="Digite seu nome" required>
+                    </div>
 
-        <div class="form-group">
-            <label>Senha</label>
-            <input type="password" class="form-control" placeholder="Digite sua senha" required>
-        </div>
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" class="form-control" name="email" aria-describedby="emailHelp" placeholder="Digite seu email" required>
+                    </div>
 
-        <div class="form-group">
-            <label>Repetir senha</label>
-            <input type="password" class="form-control" placeholder="Repita a senha" required>
-        </div>
+                    <div class="form-group">
+                        <label>Senha</label>
+                        <input type="password" class="form-control" name="senha" placeholder="Digite sua senha" required>
+                    </div>
 
-        <button type="button" class="btn btn-primary btn-lg btn-block">Cadastrar</button>
-    </form>
-</div>
+                    <button type="submit" class="btn btn-primary btn-lg btn-block">Cadastrar</button>
+                </form>
+    </div>

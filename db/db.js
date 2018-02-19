@@ -14,4 +14,11 @@ var filmeSchema = new mongoose.Schema({
 }, { collection: 'filme' }
 );
 
-module.exports = { Mongoose: mongoose, FilmeSchema: filmeSchema }
+var userSchema = new mongoose.Schema({
+    nome: { type: String, unique: true, required: true, dropDups: true },
+    email: { type: String, unique: true, required: true, dropDups: true },
+    senha: { type: String, unique: true, required: true, dropDups: true }
+}, { collection: 'user' }
+);
+
+module.exports = { Mongoose: mongoose, FilmeSchema: filmeSchema, UserSchema: userSchema }
