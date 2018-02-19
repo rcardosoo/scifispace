@@ -44,24 +44,48 @@
                                 <li class="list-group-item">Popularidade: <%= filme.popularity %>
                                 | IMDB: <%= filme.vote_average %></li>
                                 <li class="list-group-item">Dirigido por <strong><%= production.crew[0].name %></strong></li>
+                            
                                 <li class="list-group-item">
-                                    <div class="range range-info">
-                                        <input type="range" name="range" min="1" max="100" value="50" onchange="rangeInfo.value=value">
-                                        <output id="rangeInfo">50</output>
-                                    </div>
+                                    <smal>Use a escala para votar.</smal>
+                                    <button type="button" id="btnVoto" data-toggle="modal" data-target="#modalVoto" class="btn btn-primary btn-lg btn-block">Votar</button>
                                 </li>
-                                <li class="list-group-item">
-                                    <% if (typeof user != 'undefined') { %>
-                                        <button type="button" class="btn btn-primary btn-lg btn-block">Computar voto</button>
-                                    <% } else { %>
-                                        <button type="button" class="btn btn-primary btn-lg btn-block" disabled>Computar voto</button>                                        
-                                        <smal>Você precisa estar logado para votar</smal>    
-                                    <% } %>
-                                    </li>
                             </ul>
                         </div>
                     </div>
                 </div>
                 <% } %>
 
+                <div class="modal" id="modalVoto" tabindex="-1" role="dialog">
+                        <div class="modal-dialog" role="document">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <h5 class="modal-title">Votar</h5>
+                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                              </button>
+                            </div>
+                            <div class="modal-body">
+                                    <form action="/computar" method="post" class="form-group" style="padding: 10px;">
+                                        <smal>Entre com seu login e senha para votar</smal>
+                                        <input class="form-control form-control-sm" name="email" style="margin-bottom: 10px; margin-top: 10px;" type="email" placeholder="Email">
+                                        <input class="form-control form-control-sm" name="senha" style="margin-bottom: 10px;" type="password" placeholder="Password">                                
+                                        <div class="range range-info">
+                                                <input type="range" name="range" min="1" max="100" value="50" onchange="rangeInfo.value=value">
+                                                <output id="rangeInfo">50</output>
+                                        </div>
+                                        <hr />
+                                        <smal>Ainda não é cadastrado? <a href="/registro">cadastre-se aqui.</a></smal>
+                                
+
+                            </div>
+                            <div class="modal-footer">
+                              <button type="submit" class="btn btn-primary">Computar voto</button>
+                                    </form>
+                              <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                            </div>
+                          </div>
+                        </div>
+                </div>
+
+           
                 

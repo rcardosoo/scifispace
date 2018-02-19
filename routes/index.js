@@ -22,17 +22,27 @@ router.get('/service', function(req, res, next) {
 });
 
 router.get('/filme/:id', function (req, res, next) {
+  var idFilme = req.params.id;
+  var urlProd = "https://api.themoviedb.org/3/movie/"+ req.params.id +"/credits?api_key=516df799631d51e95f9abca329a46d83&language=pt-BR";      
+  filmeModel.filmeDetails(idFilme, function(err, result) {
+    if (!err) {
+      console.log(JSON.stringify(result)); 
+      filmeService.filmeProduction(urlProd, function(error, resData){
+          res.render('details', { filme: result, production: resData, msg: null});                  
+      });
+    } else {
+      res.render('details', { filme: null, msg: "O serviço está fora do ar" });
+    }
+  });
+});
+
+router.get('/filmeservice/:id', function (req, res, next) {
   var urlFilme = "https://api.themoviedb.org/3/movie/"+ req.params.id +"?api_key=516df799631d51e95f9abca329a46d83&language=pt-BR";  
   var urlProd = "https://api.themoviedb.org/3/movie/"+ req.params.id +"/credits?api_key=516df799631d51e95f9abca329a46d83&language=pt-BR";    
   filmeService.filmeDetails(urlFilme, function(err, result) {
     if (!err) {
       filmeService.filmeProduction(urlProd, function(error, resData){
-        console.log(JSON.stringify(resData));
-        if (session.logado) {
-          res.render('details', { filme: result, production: resData, msg: null, user: session.email });                  
-        } else {
-          res.render('details', { filme: result, production: resData, msg: null });                  
-        }
+          res.render('details', { filme: result, production: resData, msg: null});                  
       });
     } else {
       res.render('details', { filme: null, msg: "O serviço está fora do ar" });
@@ -119,31 +129,22 @@ router.post('/store', function(req, res, next) {
 
 });
 
-router.get('/logout', function(req, res, next) {
-  session.user = null;
-  session.logado = false;
-  return res.redirect('/');   
-});
-
-router.post('/login', function(req, res, next) {
+router.post('/computar/:id', function(req, res, next) {
   var data = {
     email: req.body.email,
     senha: req.body.senha
   };
-
+  var filmeId = req.params.id;
+  var voto = req.body.range;
   userModel.login(data, function (err, result) {
     if (!err && result) {
-      console.log("voltou resutado");
-      session.user = result.nome;
-      session.email = result.email;
-      session.logado = true;
-      filmeModel.showData(function(data) {
-        res.render('index', { "filmelist": data, msg: null, user: session.logado });      
+      filmeModel.computarVoto(range, result._id, filmeId, function(data) {
+        res.render('index', { "filmelist": data, msg: "Voto computado com sucesso", error: false});      
       });  
     } else {
       console.log("falhou");
       filmeModel.showData(function(data) {
-        res.render('index', { "filmelist": data, msg: "Email ou senha incorretos" });      
+        res.render('index', { "filmelist": data, msg: "Email ou senha incorretos", error: true });      
       });           
     }
   });

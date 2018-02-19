@@ -21,4 +21,14 @@ var userSchema = new mongoose.Schema({
 }, { collection: 'user' }
 );
 
-module.exports = { Mongoose: mongoose, FilmeSchema: filmeSchema, UserSchema: userSchema }
+var votoSchema = new mongoose.Schema({
+    user_id: String,
+    filme_id: String,
+    voto: String
+}, { collection: 'voto' }
+);
+
+module.exports = { Mongoose: mongoose, 
+                   FilmeSchema: filmeSchema, 
+                   UserSchema: userSchema,
+                   VotoSchema: votoSchema }

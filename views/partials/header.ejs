@@ -21,16 +21,7 @@
 
         <div class="collapse navbar-collapse" id="navbarColor01">
             <ul class="navbar-nav mr-auto">
-                    <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" id="download">Entrar<span class="caret"></span></a>
-                            <div class="dropdown-menu" style="width: 300px;padding: 10px;">
-                                <form action="/login" method="post" class="form-group" style="padding: 10px;">
-                                    <input class="form-control form-control-sm" name="email" style="margin-bottom: 10px; margin-top: 10px;" type="email" placeholder="Email">
-                                    <input class="form-control form-control-sm" name="senha" style="margin-bottom: 10px;" type="password" placeholder="Password">                                
-                                    <button type="submit" class="btn btn-primary btn-lg btn-block">Entrar</button>
-                                </form>
-                            </div>
-                    </li>
+                    
             </ul>
             
             <ul class="navbar-nav my-2 my-lg-0">
@@ -45,12 +36,6 @@
                     <li class="nav-item">
                         <a class="nav-link" href="/registro">Registrar</a>
                     </li>
-
-                    <% if(typeof user != 'undefined') { %>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/logout">Logout</a>
-                        </li>
-                    <% } %>
                 </ul>
         </div>
         </div>
