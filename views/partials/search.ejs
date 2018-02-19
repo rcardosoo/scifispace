@@ -1,0 +1,62 @@
+<div class="row" style="margin-bottom: 20px;">
+    <div class="col-md-6">
+        <div class="alert alert-info">
+            Descubra filmes de
+            <strong>Ficção científica</strong>
+            utilizando a
+            <a href="#">Escala scifi</a>
+            <br/>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam fermentum, odio sed dictum vulputate, est magna mattis felis,
+            accumsan vehicula massa elit accumsan dolor.
+        </div>
+    </div>
+    <div class="col-md-6">
+        <form action="/busca" method="post">
+            <div class="form-group">
+                <div class="input-group mb-3">
+                    <input type="text" class="form-control" name="busca" placeholder="Buscar por título">
+                </div>
+                <div class="row">
+                    <div class="col-md-10">
+                        <div class="row" style="margin-bottom: 10px;">
+                            <div class="col-md-6"><strong>- Base científica</strong></div>
+                            <div class="col-md-6" 
+                            style="text-align: right;"><strong>+ Base científica</strong></div>
+                        </div>
+                        <div class="range range-info">
+                            <input type="range" name="range" min="1" max="100" value="50" onchange="rangeInfo.value=value">
+                            <output id="rangeInfo">50</output>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <button type="submit" style="width: 100%;margin-top: 30px;" class="btn btn-info">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    var rangeSlider = function () {
+        var slider = $('.range-slider'),
+            range = $('.range-slider__range'),
+            value = $('.range-slider__value');
+
+        slider.each(function () {
+
+            value.each(function () {
+                var value = $(this).prev().attr('value');
+                $(this).html(value);
+            });
+
+            range.on('input', function () {
+                $(this).next(value).html(this.value);
+            });
+        });
+    };
+
+    rangeSlider();
+</script>

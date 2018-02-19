@@ -34,10 +34,21 @@ class FilmeModel {
 
     showData(callback) {
         var Filmes = db.Mongoose.model('filme', db.FilmeSchema, 'filme');
-        Filmes.find({}).sort( { vote_average: -1 } )
+        Filmes.find({}).sort( { popularity: -1 } )
         .lean().exec(
             function (e, docs) {
                 callback(docs);
+            });
+    }
+
+    searchFilme(busca, callback) {
+        console.log("VAI TENTAR PELO MONGO, BUSCA: "+busca);
+        var Filmes = db.Mongoose.model('filme', db.FilmeSchema, 'filme');
+        Filmes.find({title: "/"+busca+"/"}).sort( { popularity: -1 } )
+        .lean().exec(
+            function (e, docs) {
+                console.log("ACHOU: "+JSON.stringify(docs));
+                callback(null, docs);
             });
     }
 

@@ -21,8 +21,19 @@ class FilmeService {
     request(urlAPI, function (error, response, body) {
         if (error == null) {
             var data = JSON.parse(body);
-            console.log("Request funcionou, dados: "+data);
             return callback(null, data);
+        } else {
+            console.log("Ocorreu um erro ao buscar o fime - Error: "+error);
+            return callback(error, null);
+        }
+    });
+   }
+
+   searchFilme(urlAPI, callback) {
+    request(urlAPI, function (error, response, body) {
+        if (error == null) {
+            var data = JSON.parse(body);
+            return callback(null, data.results);   
         } else {
             console.log("Ocorreu um erro ao buscar o fime - Error: "+error);
             return callback(error, null);
