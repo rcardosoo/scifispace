@@ -27,22 +27,10 @@ router.get('/filme/:id', function (req, res, next) {
   filmeModel.filmeDetails(idFilme, function(err, result) {
     if (!err) {
       console.log(JSON.stringify(result)); 
-      filmeService.filmeProduction(urlProd, function(error, resData){
-          res.render('details', { filme: result, production: resData, msg: null});                  
-      });
-    } else {
-      res.render('details', { filme: null, msg: "O serviço está fora do ar" });
-    }
-  });
-});
-
-router.get('/filmeservice/:id', function (req, res, next) {
-  var urlFilme = "https://api.themoviedb.org/3/movie/"+ req.params.id +"?api_key=516df799631d51e95f9abca329a46d83&language=pt-BR";  
-  var urlProd = "https://api.themoviedb.org/3/movie/"+ req.params.id +"/credits?api_key=516df799631d51e95f9abca329a46d83&language=pt-BR";    
-  filmeService.filmeDetails(urlFilme, function(err, result) {
-    if (!err) {
-      filmeService.filmeProduction(urlProd, function(error, resData){
-          res.render('details', { filme: result, production: resData, msg: null});                  
+      filmeService.filmeProduction(urlProd, function(error, resData) {
+          filmeModel.filmeGenres(result.genres, function(resGenres) {
+              res.render('details', { filme: result, production: resData, genres: resGenres, msg: null});                                
+          });
       });
     } else {
       res.render('details', { filme: null, msg: "O serviço está fora do ar" });
@@ -64,7 +52,7 @@ router.get('/registro', function (req, res, next) {
   res.render('registro', { msg: null, error: false });
 });
 
-router.get('/sincronizar', function(req, res, next) {  
+router.get('/sincronizar', function(req, res, next) {
   request(urlAPI, function callback(error, response, body) {
     if (!error && response.statusCode == 200) {
       var data = JSON.parse(body);
@@ -146,6 +134,17 @@ router.post('/computar/:id', function(req, res, next) {
       filmeModel.showData(function(data) {
         res.render('index', { "filmelist": data, msg: "Email ou senha incorretos", error: true });      
       });           
+    }
+  });
+});
+
+router.get('/genres', function(req, res, next) {
+  filmeModel.insertGenres(function(e) {
+    if (!e) {
+      res.redirect('/');
+    } else {
+      console.log("Erro ao inserir generos: "+e);
+      res.redirect('/');
     }
   });
 });

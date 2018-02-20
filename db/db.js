@@ -10,7 +10,8 @@ var filmeSchema = new mongoose.Schema({
     overview: String,
     release_date: String,
     voto: String,
-    Page: String
+    genres: Object,
+    page: String
 }, { collection: 'filme' }
 );
 
@@ -19,6 +20,12 @@ var userSchema = new mongoose.Schema({
     email: { type: String, unique: true, required: true, dropDups: true },
     senha: { type: String, unique: true, required: true, dropDups: true }
 }, { collection: 'user' }
+);
+
+var generoSchema = new mongoose.Schema({
+    genero_id: String,
+    nome: String,
+}, { collection: 'genero' }
 );
 
 var votoSchema = new mongoose.Schema({
@@ -31,4 +38,5 @@ var votoSchema = new mongoose.Schema({
 module.exports = { Mongoose: mongoose, 
                    FilmeSchema: filmeSchema, 
                    UserSchema: userSchema,
+                   GeneroSchema: generoSchema,
                    VotoSchema: votoSchema }

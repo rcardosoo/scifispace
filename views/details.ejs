@@ -31,11 +31,11 @@
                             </div>
                             <ul class="list-group list-group-flush">
                                 <li class="list-group-item">
-                                    <% filme.genres.forEach(function(genre) { %>
-                                        <% if (genre.id == 878) { %>
-                                            <span class="badge badge-primary"><%= genre.name %></span>
+                                    <% genres.forEach(function(genre) { %>
+                                        <% if (genre.genero_id == 878) { %>
+                                            <span class="badge badge-primary"><%= genre.nome %></span>
                                         <% } else { %>
-                                            <span class="badge badge-secondary"><%= genre.name %></span>
+                                            <span class="badge badge-secondary"><%= genre.nome %></span>
                                         <% } %> 
                                     <% }) %>
                                 </li>

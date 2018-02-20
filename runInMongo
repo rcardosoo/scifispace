@@ -1,3 +1,4 @@
 db.createCollection('filme', {})
 db.createCollection('user', {})
 db.createCollection('voto', {})
+db.createCollection('genero', {})

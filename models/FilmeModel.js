@@ -1,6 +1,7 @@
 "use strict";
 var request = require('request');
 var db = require("../db/db");
+var genres = require("../util/genres");
 
 class FilmeModel {
 
@@ -23,7 +24,25 @@ class FilmeModel {
                 }
             });
         }
-        callback(null, true);
+    }
+
+    insertGenres(callback) {
+        console.log("Inserindo generos");
+        var Genero = db.Mongoose.model('genero', db.GeneroSchema, 'genero');
+        for (var index in genres.list) {
+            console.log("inseriu genero: "+index);
+            let genreToCreate = new Genero({
+                genero_id: genres.list[index].id,
+                nome: genres.list[index].name,
+            });
+            genreToCreate.save(function(err) {
+                if (err) {
+                    console.log("Error! " + err.message);
+                    callback(err);
+                }
+            });
+        }
+        callback(null);
     }
 
     showData(callback) {
@@ -33,6 +52,25 @@ class FilmeModel {
             function (e, docs) {
                 callback(docs);
             });
+    }
+
+    filmeGenres(data, callback) {
+        var Genero = db.Mongoose.model('genero', db.GeneroSchema, 'genero');
+        var dataGenres = [];
+        var tam = Object.keys(data).length; 
+        for (var index in data) {
+            console.log(index);
+            Genero.find({genero_id: data[index]}).exec(function(e, docs) {
+                if (docs) {
+                    if (index == tam-1) {
+                        dataGenres.push(docs);                         
+                        callback(dataGenres);
+                    } else {
+                        dataGenres.push(docs); 
+                    }                   
+                }
+            });
+        }
     }
 
     filmeDetails(idFilme, callback) {
@@ -129,8 +167,6 @@ class FilmeModel {
     }
 
     insertData(data, page, callback) {
-        console.log("ENTROU NO INSERT DATA");
-        console.log("VAI INSERIR: " + data);
         var Filmes = db.Mongoose.model('filme', db.FilmeSchema, 'filme');
         var filme = new Filmes({
             id: data.id,
@@ -141,7 +177,8 @@ class FilmeModel {
             overview: data.overview,
             release_date: data.release_date,
             voto: 0,
-            Page: page
+            genres: data.genre_ids,
+            page: page
         });
 
         filme.save(function (err) {
