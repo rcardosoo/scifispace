@@ -2,7 +2,15 @@
 <% include ./partials/search %>
 
     <% if (msg != null) { %>
-        <div class="alert alert-danger"><%= msg %></div>
+        <% if (typeof error != 'undefined') { %>
+            <% if (error) { %>
+                <div class="alert alert-danger"><%= msg %></div>                            
+            <% } else { %>
+                <div class="alert alert-success"><%= msg %></div>            
+            <% } %>
+        <% } else { %>
+            <div class="alert alert-info"><%= msg %></div>            
+        <% } %>
     <% } %>
 
     <% if (filmelist != null) { %>

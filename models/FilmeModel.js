@@ -91,13 +91,15 @@ class FilmeModel {
     }
 
     computarVoto(nota, userId, filmeId, callback) {
+        console.log("Entrou em computador voto");
         var self = this;
         var Voto = db.Mongoose.model('voto', db.VotoSchema, 'voto');
         Voto.find({ user_id: userId, filme_id: filmeId }).exec(function (e, docs) {
-            if (docs) {
+            if (docs && JSON.stringify(docs) != '[]') {
+                console.log("existe voto com o filmeID especificado: ");
                 Voto.update({ user_id: userId, filme_id: filmeId },
                     { voto: nota }).exec(function (e, docs) {
-                        if (err) {
+                        if (e) {
                             console.log("Error! " + err.message);
                             callback(err, false);
                         }
@@ -114,17 +116,20 @@ class FilmeModel {
                         }
                     });
             } else {
+                console.log("nao existe voto desse usuario para esse filme");
                 var votoToCreate = new Voto({
                     user_id: userId,
                     filme_id: filmeId,
                     voto: nota
                 });
+                console.log("voto criado");
                 votoToCreate.save(function (err) {
                     if (err) {
                         console.log("Error! " + err.message);
                         callback(err, false);
                     }
                     else {
+                        console.log("voto inserido, vai recalcular");
                         self.recalcularVoto(filmeId, function (err, result) {
                             if (!err) {
                                 console.log("Voto computado!");
@@ -142,9 +147,10 @@ class FilmeModel {
     }
 
     recalcularVoto(filmeId, callback) {
-        var Filmes = db.Mongoose.model('filme', db.FilmeSchema, 'filme');
-        Filmes.find({}).exec(function (e, docs) {
+        var Voto = db.Mongoose.model('voto', db.VotoSchema, 'voto');        
+        Voto.find({filme_id: filmeId}).exec(function (e, docs) {
             if (docs) {
+                console.log("encontrou os filmes em voto..");
                 var soma = 0;
                 for (var i = 0; i < docs[0].lenght; i++) {
                     soma += docs[0].voto;

@@ -133,13 +133,15 @@ router.post('/computar/:id', function(req, res, next) {
   };
   var filmeId = req.params.id;
   var voto = req.body.range;
+
   userModel.login(data, function (err, result) {
     if (!err && result) {
-      filmeModel.computarVoto(range, result._id, filmeId, function(data) {
-        res.render('index', { "filmelist": data, msg: "Voto computado com sucesso", error: false});      
+      filmeModel.computarVoto(voto, result._id, filmeId, function(data) {
+        filmeModel.showData(function(data) {
+          res.render('index', { "filmelist": data, msg: "Voto computado com sucesso", error: false});      
+        });
       });  
     } else {
-      console.log("falhou");
       filmeModel.showData(function(data) {
         res.render('index', { "filmelist": data, msg: "Email ou senha incorretos", error: true });      
       });           
