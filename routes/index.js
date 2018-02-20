@@ -26,10 +26,19 @@ router.get('/filme/:id', function (req, res, next) {
   var urlProd = "https://api.themoviedb.org/3/movie/"+ req.params.id +"/credits?api_key=516df799631d51e95f9abca329a46d83&language=pt-BR";      
   filmeModel.filmeDetails(idFilme, function(err, result) {
     if (!err) {
-      console.log(JSON.stringify(result)); 
       filmeService.filmeProduction(urlProd, function(error, resData) {
-          filmeModel.filmeGenres(result.genres, function(resGenres) {
-              res.render('details', { filme: result, production: resData, genres: resGenres, msg: null});                                
+          filmeModel.filmeGenres(function(e, resGenres) {
+            if (resGenres) {
+              var genresArray = JSON.stringify(result.genres).slice(1);
+              genresArray = genresArray.slice(0, -1);
+              genresArray = genresArray.split(',');
+              
+              res.render('details', { filme: result, production: resData,
+                                      genres: resGenres, genresFilme: genresArray, msg: null});
+            } else {
+              console.log("Erro ao buscar generos: "+e);
+              res.redirect('/');
+            }                              
           });
       });
     } else {

@@ -30,12 +30,12 @@ class FilmeModel {
         console.log("Inserindo generos");
         var Genero = db.Mongoose.model('genero', db.GeneroSchema, 'genero');
         for (var index in genres.list) {
-            console.log("inseriu genero: "+index);
+            console.log("inseriu genero: " + index);
             let genreToCreate = new Genero({
                 genero_id: genres.list[index].id,
                 nome: genres.list[index].name,
             });
-            genreToCreate.save(function(err) {
+            genreToCreate.save(function (err) {
                 if (err) {
                     console.log("Error! " + err.message);
                     callback(err);
@@ -47,35 +47,28 @@ class FilmeModel {
 
     showData(callback) {
         var Filmes = db.Mongoose.model('filme', db.FilmeSchema, 'filme');
-        Filmes.find({}).sort( { popularity: -1 } )
-        .lean().exec(
+        Filmes.find({}).sort({ popularity: -1 })
+            .lean().exec(
             function (e, docs) {
                 callback(docs);
             });
     }
 
-    filmeGenres(data, callback) {
+    filmeGenres(callback) {
         var Genero = db.Mongoose.model('genero', db.GeneroSchema, 'genero');
-        var dataGenres = [];
-        var tam = Object.keys(data).length; 
-        for (var index in data) {
-            console.log(index);
-            Genero.find({genero_id: data[index]}).exec(function(e, docs) {
-                if (docs) {
-                    if (index == tam-1) {
-                        dataGenres.push(docs);                         
-                        callback(dataGenres);
-                    } else {
-                        dataGenres.push(docs); 
-                    }                   
-                }
-            });
-        }
+        Genero.find({}).exec(function (e, docs) {
+            if (docs) {
+                callback(null, docs);
+            } else {
+                callback(e, null);                
+            }
+        });
+
     }
 
     filmeDetails(idFilme, callback) {
         var Filmes = db.Mongoose.model('filme', db.FilmeSchema, 'filme');
-        Filmes.find({id: idFilme}).exec(
+        Filmes.find({ id: idFilme }).exec(
             function (e, docs) {
                 if (docs) {
                     callback(null, docs[0]);
@@ -87,12 +80,12 @@ class FilmeModel {
     }
 
     searchFilme(busca, callback) {
-        console.log("VAI BUSCAR PELO MONGO, BUSCA: "+busca);
+        console.log("VAI BUSCAR PELO MONGO, BUSCA: " + busca);
         var Filmes = db.Mongoose.model('filme', db.FilmeSchema, 'filme');
-        Filmes.find({title: "/"+busca+"/"}).sort( { popularity: -1 } )
-        .lean().exec(
+        Filmes.find({ title: "/" + busca + "/" }).sort({ popularity: -1 })
+            .lean().exec(
             function (e, docs) {
-                console.log("ACHOU: "+JSON.stringify(docs));
+                console.log("ACHOU: " + JSON.stringify(docs));
                 callback(null, docs);
             });
     }
@@ -100,39 +93,39 @@ class FilmeModel {
     computarVoto(nota, userId, filmeId, callback) {
         var self = this;
         var Voto = db.Mongoose.model('voto', db.VotoSchema, 'voto');
-        Voto.find({user_id: userId, filme_id: filmeId}).exec(function(e, docs) {
+        Voto.find({ user_id: userId, filme_id: filmeId }).exec(function (e, docs) {
             if (docs) {
-            Voto.update({user_id: userId, filme_id: filmeId},
-                {voto: nota}).exec(function(e, docs) {
-                    if (err) {
-                        console.log("Error! " + err.message);
-                        callback(err, false);
-                    }
-                    else {
-                        self.recalcularVoto(filmeId, function(err, result) {
-                            if (!err) {
-                                console.log("Voto computado!");
-                                callback(null, true);
-                            } else {
-                                console.log("Error! " + err.message);
-                                callback(err, false);
-                            }
-                        });  
-                    }
-                });
+                Voto.update({ user_id: userId, filme_id: filmeId },
+                    { voto: nota }).exec(function (e, docs) {
+                        if (err) {
+                            console.log("Error! " + err.message);
+                            callback(err, false);
+                        }
+                        else {
+                            self.recalcularVoto(filmeId, function (err, result) {
+                                if (!err) {
+                                    console.log("Voto computado!");
+                                    callback(null, true);
+                                } else {
+                                    console.log("Error! " + err.message);
+                                    callback(err, false);
+                                }
+                            });
+                        }
+                    });
             } else {
                 var votoToCreate = new Voto({
                     user_id: userId,
                     filme_id: filmeId,
                     voto: nota
                 });
-                votoToCreate.save(function(err) {
+                votoToCreate.save(function (err) {
                     if (err) {
                         console.log("Error! " + err.message);
                         callback(err, false);
                     }
                     else {
-                        self.recalcularVoto(filmeId, function(err, result) {
+                        self.recalcularVoto(filmeId, function (err, result) {
                             if (!err) {
                                 console.log("Voto computado!");
                                 callback(null, result);
@@ -140,30 +133,30 @@ class FilmeModel {
                                 console.log("Error! " + err.message);
                                 callback(err, false);
                             }
-                        });  
+                        });
                     }
                 });
             }
         });
-            
+
     }
 
     recalcularVoto(filmeId, callback) {
         var Filmes = db.Mongoose.model('filme', db.FilmeSchema, 'filme');
-        Filmes.find({}).exec(function(e, docs) {
+        Filmes.find({}).exec(function (e, docs) {
             if (docs) {
                 var soma = 0;
-                for (var i=0; i < docs[0].lenght;i++) {
+                for (var i = 0; i < docs[0].lenght; i++) {
                     soma += docs[0].voto;
                 }
-                soma = soma/i;
-                callback(null, soma);                
+                soma = soma / i;
+                callback(null, soma);
             } else {
                 console.log("Error! " + err.message);
                 callback(err, false);
             }
-            
-        });    
+
+        });
     }
 
     insertData(data, page, callback) {

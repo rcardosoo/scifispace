@@ -32,11 +32,13 @@
                             <ul class="list-group list-group-flush">
                                 <li class="list-group-item">
                                     <% genres.forEach(function(genre) { %>
-                                        <% if (genre.genero_id == 878) { %>
-                                            <span class="badge badge-primary"><%= genre.nome %></span>
-                                        <% } else { %>
-                                            <span class="badge badge-secondary"><%= genre.nome %></span>
-                                        <% } %> 
+                                        <% if (genresFilme.indexOf(genre.genero_id) != -1) { %>
+                                            <% if (genre.genero_id == 878) { %>
+                                                <span class="badge badge-primary"><%= genre.nome %></span>
+                                            <% } else { %>
+                                                <span class="badge badge-secondary"><%= genre.nome %></span>
+                                            <% } %> 
+                                        <% } %>
                                     <% }) %>
                                 </li>
                                 <li class="list-group-item">Duração: <%= filme.runtime %> | Lançamento em <%= filme.release_date %>
