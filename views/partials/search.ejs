@@ -17,15 +17,16 @@
                     <input type="text" class="form-control" name="busca" placeholder="Buscar por título">
                 </div>
                 <div class="row">
-                    <div class="col-md-10">
-                        <div class="row" style="margin-bottom: 10px;">
-                            <div class="col-md-6"><strong>- Base científica</strong></div>
-                            <div class="col-md-6" 
-                            style="text-align: right;"><strong>+ Base científica</strong></div>
-                        </div>
-                        <div class="range range-info">
-                            <input type="range" name="range" min="1" max="100" value="50" onchange="rangeInfo.value=value">
-                            <output id="rangeInfo">50</output>
+                    <div class="col-md-10">         
+                        <p>Filtro de busca</p>
+                        <div class="form-group">
+                                <select class="form-control" name="ordem">
+                                        <option value="popularity">Popularidade</option>
+                                        <option value="release-date">Data de lançamento</option>
+                                        <option value="vote_average">Classificação IMDB</option>
+                                        <option value="voto.desc">Mais científico</option>
+                                        <option value="voto.asc">Menos científico</option>
+                                </select>
                         </div>
                     </div>
                     <div class="col-md-2">
