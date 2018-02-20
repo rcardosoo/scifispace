@@ -106,8 +106,12 @@ class FilmeModel {
                         else {
                             self.recalcularVoto(filmeId, function (err, result) {
                                 if (!err) {
-                                    console.log("Voto computado!");
-                                    callback(null, true);
+                                    console.log("Voto computado! = result: "+result);
+                                    self.setVoto(filmeId, result, function(r) {
+                                        if (r) {
+                                            callback(null, true);
+                                        }
+                                    });
                                 } else {
                                     console.log("Error! " + err.message);
                                     callback(err, false);
@@ -132,8 +136,12 @@ class FilmeModel {
                         console.log("voto inserido, vai recalcular");
                         self.recalcularVoto(filmeId, function (err, result) {
                             if (!err) {
-                                console.log("Voto computado!");
-                                callback(null, result);
+                                console.log("Voto computado! = result: "+result);
+                                self.setVoto(filmeId, result, function(r) {
+                                    if (r) {
+                                        callback(null, true);
+                                    }
+                                });
                             } else {
                                 console.log("Error! " + err.message);
                                 callback(err, false);
@@ -146,17 +154,30 @@ class FilmeModel {
 
     }
 
+    setVoto(filmeId, calculo, callback) {
+        var Filme = db.Mongoose.model('filme', db.FilmeSchema, 'filme'); 
+        var votoNumber = Number((calculo).toFixed(1));  
+        var votoNumber = votoNumber+"";
+        console.log("VOTO = "+calculo);
+        Filme.update({ id: filmeId },
+            { voto: votoNumber }).exec(function (e, docs) {
+            if (docs) {
+                callback(true);
+            } else {
+                callback(false);
+            }        
+        });
+    }
+
     recalcularVoto(filmeId, callback) {
         var Voto = db.Mongoose.model('voto', db.VotoSchema, 'voto');        
         Voto.find({filme_id: filmeId}).exec(function (e, docs) {
             if (docs) {
-                console.log("encontrou os filmes em voto..");
-                var soma = 0;
-                for (var i = 0; i < docs[0].lenght; i++) {
-                    soma += docs[0].voto;
+                let soma = 0;
+                for (var i in docs) {
+                    soma = soma + parseInt(docs[i].voto);
                 }
-                soma = soma / i;
-                callback(null, soma);
+                callback(null, soma/docs.length);
             } else {
                 console.log("Error! " + err.message);
                 callback(err, false);
