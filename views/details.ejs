@@ -23,7 +23,7 @@
                             
                             <div class="card-header progress-bar progress-bar-striped progress-bar-animated bg-info"
                             role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"
-                            style="width: 35%;"><output style="font-weight: 800;color: #eee;">50%</output></div>
+                            style="width: <%= filme.voto %>%;"><output style="font-weight: 800;color: #eee;"><%= filme.voto %>%</output></div>
 
                             <h5 class="card-header">Sinopse</h5>
                             <div class="card-body">
@@ -72,8 +72,8 @@
                                         <input class="form-control form-control-sm" name="email" style="margin-bottom: 10px; margin-top: 10px;" type="email" placeholder="Email">
                                         <input class="form-control form-control-sm" name="senha" style="margin-bottom: 10px;" type="password" placeholder="Password">                                
                                         <div class="range range-info">
-                                                <input type="range" name="range" min="1" max="100" value="50" onchange="rangeInfo.value=value">
-                                                <output id="rangeInfo">50</output>
+                                                <input type="range" name="range" min="1" max="100" value="<%= filme.voto %>" onchange="rangeInfo.value=value">
+                                                <output id="rangeInfo"><%= filme.voto %></output>
                                         </div>
                                         <hr />
                                         <smal>Ainda não é cadastrado? <a href="/registro">cadastre-se aqui.</a></smal>

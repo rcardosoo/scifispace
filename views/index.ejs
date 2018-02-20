@@ -1,36 +1,44 @@
 <% include ./partials/header %>
-<% include ./partials/search %>
+    <% include ./partials/search %>
 
-    <% if (msg != null) { %>
-        <% if (typeof error != 'undefined') { %>
-            <% if (error) { %>
-                <div class="alert alert-danger"><%= msg %></div>                            
-            <% } else { %>
-                <div class="alert alert-success"><%= msg %></div>            
-            <% } %>
-        <% } else { %>
-            <div class="alert alert-info"><%= msg %></div>            
-        <% } %>
-    <% } %>
-
-    <% if (filmelist != null) { %>
-        <div class="row">
-        <% filmelist.forEach(function(filme) { %>
-            <div class="col-md-3">
-                <div class="card mb-3">
-                    <a href="/filme/<%= filme.id %>" style="margin: 0px; padding: 0px; text-decoration: none;">
-                        <img style="max-height: 342px;width: 100%;max-width:100%;display:block;" src="http://image.tmdb.org/t/p/w342<%= filme.poster_path %>">
-                    </a>
-                    <div class="card-body">
-                        <p class="card-text"><%= filme.title %></p>
+        <% if (msg != null) { %>
+            <% if (typeof error != 'undefined') { %>
+                <% if (error) { %>
+                    <div class="alert alert-danger">
+                        <%= msg %>
                     </div>
-                    <div class="card-body">
-                        <div class="progress">
-                            <div class="progress-bar progress-bar-striped progress-bar-animated bg-info" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 20%;"></div>
+                    <% } else { %>
+                        <div class="alert alert-success">
+                            <%= msg %>
                         </div>
-                    </div>
-                </div>
-            </div>
-        <% }) %>
-        </div>
-    <% } %>
+                        <% } %>
+                            <% } else { %>
+                                <div class="alert alert-info">
+                                    <%= msg %>
+                                </div>
+                                <% } %>
+                                    <% } %>
+
+                                        <% if (filmelist != null) { %>
+                                            <div class="row">
+                                                <% filmelist.forEach(function(filme) { %>
+                                                    <div class="col-md-3">
+                                                        <div class="card mb-3">
+                                                            <a href="/filme/<%= filme.id %>" style="margin: 0px; padding: 0px; text-decoration: none;">
+                                                                <img style="max-height: 342px;width: 100%;max-width:100%;display:block;" src="http://image.tmdb.org/t/p/w342<%= filme.poster_path %>">
+                                                            </a>
+                                                            <div class="card-body">
+                                                                <p class="card-text">
+                                                                    <%= filme.title %>
+                                                                </p>
+                                                            </div>
+                                                            <div class="card-body">
+                                                                    <div class="card-header progress-bar progress-bar-striped progress-bar-animated bg-info"
+                                                                    role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"
+                                                                    style="width: <%= filme.voto %>%;"><output style="font-weight: 800;color: #eee;"><%= filme.voto %>%</output></div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <% }) %>
+                                            </div>
+                                            <% } %>
