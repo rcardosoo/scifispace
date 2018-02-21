@@ -9,9 +9,8 @@ var filmeSchema = new mongoose.Schema({
     poster_path: String,
     overview: String,
     release_date: String,
-    voto: String,
-    genres: Object,
-    page: String
+    voto: [Number],
+    genres: Object
 }, { collection: 'filme' }
 );
 

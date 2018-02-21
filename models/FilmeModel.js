@@ -2,6 +2,7 @@
 var request = require('request');
 var db = require("../db/db");
 var genres = require("../util/genres");
+var moment = require('moment');
 
 class FilmeModel {
 
@@ -47,8 +48,8 @@ class FilmeModel {
 
     showData(callback) {
         var Filmes = db.Mongoose.model('filme', db.FilmeSchema, 'filme');
-        Filmes.find({}).sort({ popularity: -1 })
-            .lean().exec(
+        Filmes.find({}).sort({ voto: -1 })
+            .lean().limit(16).exec(
             function (e, docs) {
                 callback(docs);
             });
@@ -80,14 +81,21 @@ class FilmeModel {
     }
 
     searchFilme(busca, callback) {
-        console.log("VAI BUSCAR PELO MONGO, BUSCA: " + busca);
         var Filmes = db.Mongoose.model('filme', db.FilmeSchema, 'filme');
-        Filmes.find({ title: "/" + busca + "/" }).sort({ popularity: -1 })
-            .lean().exec(
+        console.log("BUSCA: "+busca);
+        if (busca != null) {
+            Filmes.find({title:{'$regex' : busca, '$options' : 'i'}}).sort({voto: -1})
+            .exec(
             function (e, docs) {
-                console.log("ACHOU: " + JSON.stringify(docs));
-                callback(null, docs);
+                if (JSON.stringify(docs) != "[]") {
+                    callback(null, docs);
+                } else {
+                    callback(e, null);
+                }
             });
+        } else {
+            callback(null, null);
+        }
     }
 
     computarVoto(nota, userId, filmeId, callback) {
@@ -188,6 +196,7 @@ class FilmeModel {
 
     insertData(data, page, callback) {
         var Filmes = db.Mongoose.model('filme', db.FilmeSchema, 'filme');
+        var dataformatada = moment(data.release_date, "YYYY-MM-DD").format("DD/MM/YYYY");
         var filme = new Filmes({
             id: data.id,
             vote_average: data.vote_average,
@@ -195,7 +204,7 @@ class FilmeModel {
             popularity: data.popularity,
             poster_path: data.poster_path,
             overview: data.overview,
-            release_date: data.release_date,
+            release_date: dataformatada,
             voto: 0,
             genres: data.genre_ids,
             page: page

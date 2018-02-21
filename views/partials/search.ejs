@@ -1,36 +1,24 @@
 <div class="row" style="margin-bottom: 20px;">
     <div class="col-md-6">
         <div class="alert alert-info">
-            Descubra filmes de
+            Descubra os melhores filmes de
             <strong>Ficção científica</strong>
             utilizando a
-            <a href="#">Escala scifi</a>
+            <a href="/sobre">Escala scifi</a>.
             <br/>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam fermentum, odio sed dictum vulputate, est magna mattis felis,
-            accumsan vehicula massa elit accumsan dolor.
+            Não deixe de contribuir votando no seu filme preferido, basta se <a href="/registro">cadastrar</a>
+            e votar quantas vezes quiser.
         </div>
     </div>
     <div class="col-md-6">
         <form action="/busca" method="post">
             <div class="form-group">
                 <div class="input-group mb-3">
-                    <input type="text" class="form-control" name="busca" placeholder="Buscar por título">
+                    <input type="text" class="form-control form-control-lg" name="busca" placeholder="Buscar por título" required>
                 </div>
                 <div class="row">
-                    <div class="col-md-10">         
-                        <p>Filtro de busca</p>
-                        <div class="form-group">
-                                <select class="form-control" name="ordem">
-                                        <option value="popularity">Popularidade</option>
-                                        <option value="release-date">Data de lançamento</option>
-                                        <option value="vote_average">Classificação IMDB</option>
-                                        <option value="voto.desc">Mais científico</option>
-                                        <option value="voto.asc">Menos científico</option>
-                                </select>
-                        </div>
-                    </div>
-                    <div class="col-md-2">
-                        <button type="submit" style="width: 100%;margin-top: 30px;" class="btn btn-info">
+                    <div class="col-md-12">                            
+                        <button type="submit" class="btn btn-info btn-lg btn-block">
                             <i class="fa fa-search"></i>
                         </button>
                     </div>

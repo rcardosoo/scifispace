@@ -28,14 +28,19 @@
                                                                 <img style="max-height: 342px;width: 100%;max-width:100%;display:block;" src="http://image.tmdb.org/t/p/w342<%= filme.poster_path %>">
                                                             </a>
                                                             <div class="card-body">
-                                                                <p class="card-text">
-                                                                    <%= filme.title %>
-                                                                </p>
+                                                                <h2 style="font-size: 10pt;"><strong><%= filme.title %></strong></h2>
                                                             </div>
+                                                            <hr />
                                                             <div class="card-body">
-                                                                    <div class="card-header progress-bar progress-bar-striped progress-bar-animated bg-info"
-                                                                    role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"
-                                                                    style="width: <%= filme.voto %>%;"><output style="font-weight: 800;color: #eee;"><%= filme.voto %>%</output></div>
+                                                                    <% if (filme.voto == '0') { %>
+                                                                        <div class="card-header progress-bar progress-bar-striped progress-bar-animated bg-secondary"
+                                                                        role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"
+                                                                        style="width: 100%;max-height: 40px;"><output style="font-weight: 800;font-size: 8pt;color: #eee;">Não houve votos</output></div>
+                                                                    <% } else { %>
+                                                                        <div class="card-header progress-bar progress-bar-striped progress-bar-animated bg-info"
+                                                                        role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"
+                                                                        style="max-height: 40px;width: <%= filme.voto+'%' %>;"><output style="font-weight: 800;font-size: 8pt;color: #eee;"><%= filme.voto %>%</output></div>
+                                                                    <% } %>
                                                             </div>
                                                         </div>
                                                     </div>
