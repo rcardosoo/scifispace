@@ -23,24 +23,31 @@
                                             <div class="row">
                                                 <% filmelist.forEach(function(filme) { %>
                                                     <div class="col-md-3">
-                                                        <div class="card mb-3">
+                                                        <div about="#<%= filme.title %>" typeof="schema:Movie" class="card mb-3">
                                                             <a href="/filme/<%= filme.id %>" style="margin: 0px; padding: 0px; text-decoration: none;">
                                                                 <img style="max-height: 342px;width: 100%;max-width:100%;display:block;" src="http://image.tmdb.org/t/p/w342<%= filme.poster_path %>">
                                                             </a>
                                                             <div class="card-body">
-                                                                <h2 style="font-size: 10pt;"><strong><%= filme.title %></strong></h2>
+                                                                <h2 style="font-size: 10pt;">
+                                                                    <strong property="schema:name">
+                                                                        <%= filme.title %>
+                                                                    </strong>
+                                                                </h2>
                                                             </div>
                                                             <hr />
                                                             <div class="card-body">
-                                                                    <% if (filme.voto == '0') { %>
-                                                                        <div class="card-header progress-bar progress-bar-striped progress-bar-animated bg-secondary"
-                                                                        role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"
-                                                                        style="width: 100%;max-height: 40px;"><output style="font-weight: 800;font-size: 8pt;color: #eee;">Não houve votos</output></div>
+                                                                <% if (filme.voto == '0') { %>
+                                                                    <div property="schema:aggregateRating" typeof="schema:AggregateRating" class="card-header progress-bar progress-bar-striped progress-bar-animated bg-secondary" role="progressbar" aria-valuenow="75"
+                                                                        aria-valuemin="0" aria-valuemax="100" style="width: 100%;max-height: 40px;">
+                                                                        <output property="schema:ratingValue" style="font-weight: 800;font-size: 8pt;color: #eee;">Não houve votos</output>
+                                                                    </div>
                                                                     <% } else { %>
-                                                                        <div class="card-header progress-bar progress-bar-striped progress-bar-animated bg-info"
-                                                                        role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"
-                                                                        style="max-height: 40px;width: <%= filme.voto+'%' %>;"><output style="font-weight: 800;font-size: 8pt;color: #eee;"><%= filme.voto %>%</output></div>
-                                                                    <% } %>
+                                                                        <div property="schema:aggregateRating" typeof="schema:AggregateRating" class="card-header progress-bar progress-bar-striped progress-bar-animated bg-info" role="progressbar" aria-valuenow="75"
+                                                                            aria-valuemin="0" aria-valuemax="100" style="max-height: 40px;width: <%= filme.voto+'%' %>;">
+                                                                            <output property="schema:ratingValue" style="font-weight: 800;font-size: 8pt;color: #eee;">
+                                                                                <%= filme.voto %>%</output>
+                                                                        </div>
+                                                                        <% } %>
                                                             </div>
                                                         </div>
                                                     </div>
